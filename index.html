@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>花少8人格测试 · 解锁你的花8旅行人格</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue-deep:#123a6b;
+    --blue:#1f6fc4;
+    --blue-sky:#7cc4ff;
+    --blue-ice:#e3f2ff;
+    --orange:#ff8c1a;
+    --orange-deep:#e56e00;
+    --orange-soft:#ffd9a8;
+    --cream:#fdf3e3;
+    --ink:#2b2b2b;
+    --white:#ffffff;
+    --shadow:#0d2748;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:'幼圆','YouYuan','Yuanti SC','PingFang SC','Microsoft YaHei',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+    image-rendering:pixelated;
+  }
+  /* ---------- 像素天空背景 ---------- */
+  .sky{
+    position:fixed;inset:0;z-index:-2;
+    background:linear-gradient(180deg,#bfe3ff 0%,#e3f2ff 45%,#fdf3e3 100%);
+  }
+  .sky::before{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:120px;
+    background:
+      repeating-linear-gradient(90deg,#8ec97a 0 24px,#7dbb68 24px 48px);
+    box-shadow:0 -8px 0 #5f9e4d;
+  }
+  .cloud{position:absolute;background:#fff;box-shadow:8px 8px 0 #cfe8ff;}
+  .cloud.c1{width:96px;height:32px;top:8%;left:6%;animation:drift 40s linear infinite;}
+  .cloud.c2{width:64px;height:24px;top:16%;right:10%;animation:drift 55s linear infinite reverse;}
+  .cloud.c3{width:80px;height:24px;top:40%;left:80%;animation:drift 65s linear infinite;}
+  @keyframes drift{from{transform:translateX(-30px)}50%{transform:translateX(60px)}to{transform:translateX(-30px)}}
+  .sun{
+    position:fixed;top:24px;right:28px;z-index:-1;width:72px;height:72px;background:var(--orange);
+    box-shadow:
+      0 -16px 0 var(--orange),0 16px 0 var(--orange),-16px 0 0 var(--orange),16px 0 0 var(--orange),
+      -12px -12px 0 #ffb45e,12px -12px 0 #ffb45e,-12px 12px 0 #ffb45e,12px 12px 0 #ffb45e,
+      0 0 0 8px #ffd9a8 inset;
+    animation:sunSpin 12s steps(8) infinite;
+  }
+  @keyframes sunSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  .wrap{max-width:760px;margin:0 auto;padding:32px 18px 80px;position:relative;}
+
+  /* ---------- 通用像素面板 ---------- */
+  .panel{
+    background:var(--white);
+    border:4px solid var(--blue-deep);
+    box-shadow:
+      0 8px 0 var(--shadow),
+      8px 0 0 var(--shadow),-8px 0 0 var(--shadow),8px 8px 0 var(--shadow),-8px 8px 0 var(--shadow);
+    padding:28px 26px;
+    position:relative;
+    image-rendering:pixelated;
+  }
+  .panel::before{
+    content:"";position:absolute;inset:8px;border:2px dashed var(--blue-sky);pointer-events:none;
+  }
+  .hidden{display:none !important;}
+
+  /* ---------- 封面 ---------- */
+  .badge{
+    display:inline-block;background:var(--orange);color:#fff;
+    font-family:'Press Start 2P','幼圆',monospace;font-size:11px;
+    padding:8px 14px;border:3px solid var(--blue-deep);box-shadow:4px 4px 0 var(--shadow);
+    letter-spacing:2px;margin-bottom:18px;
+  }
+  h1.title{
+    font-size:44px;line-height:1.25;color:var(--blue-deep);
+    text-align:center;margin:6px 0 10px;
+    text-shadow:3px 3px 0 var(--blue-sky);
+  }
+  h1.title .hl{color:var(--orange);text-shadow:3px 3px 0 var(--orange-soft);}
+  .subtitle{
+    text-align:center;font-size:18px;color:var(--blue);letter-spacing:1px;margin-bottom:22px;
+  }
+  .pixel-avatars{
+    display:flex;justify-content:center;gap:14px;margin:20px 0 8px;flex-wrap:wrap;
+  }
+  .pxavatar{
+    width:64px;height:64px;display:flex;align-items:center;justify-content:center;
+    font-size:34px;background:var(--blue-ice);border:4px solid var(--blue-deep);
+    box-shadow:4px 4px 0 var(--shadow);
+    animation:bob 2.4s steps(2) infinite;
+  }
+  .pxavatar:nth-child(2){animation-delay:.3s;background:var(--orange-soft);}
+  .pxavatar:nth-child(3){animation-delay:.6s;}
+  .pxavatar:nth-child(4){animation-delay:.9s;background:var(--orange-soft);}
+  .pxavatar:nth-child(5){animation-delay:1.2s;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  .rules{
+    background:var(--blue-ice);border:3px solid var(--blue);padding:16px 18px;margin:20px 0;
+    font-size:15px;line-height:1.9;color:var(--blue-deep);
+  }
+  .rules b{color:var(--orange-deep);}
+
+  /* ---------- 按钮 ---------- */
+  .btn{
+    display:block;margin:8px auto 0;cursor:pointer;
+    font-family:'幼圆','Press Start 2P',sans-serif;
+    font-size:22px;letter-spacing:3px;color:#fff;
+    background:var(--orange);border:4px solid var(--blue-deep);
+    padding:14px 42px;
+    box-shadow:0 8px 0 var(--shadow);
+    transition:transform .05s steps(1);
+  }
+  .btn:hover{background:var(--orange-deep);}
+  .btn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--shadow);}
+  .btn.blue{background:var(--blue);}
+  .btn.blue:hover{background:var(--blue-deep);}
+  .btn.small{font-size:17px;padding:10px 28px;}
+
+  /* ---------- 答题页 ---------- */
+  .progress-outer{
+    height:22px;border:4px solid var(--blue-deep);background:#fff;margin-bottom:8px;
+    box-shadow:4px 4px 0 var(--shadow);position:relative;
+  }
+  .progress-inner{
+    height:100%;width:0%;
+    background:repeating-linear-gradient(90deg,var(--orange) 0 12px,var(--orange-deep) 12px 24px);
+    transition:width .3s steps(6);
+  }
+  .progress-label{
+    font-family:'Press Start 2P','幼圆',monospace;font-size:11px;color:var(--blue-deep);
+    text-align:right;margin-bottom:18px;letter-spacing:1px;
+  }
+  .qnum{
+    font-family:'Press Start 2P','幼圆',monospace;
+    display:inline-block;background:var(--blue);color:#fff;font-size:13px;
+    padding:7px 12px;border:3px solid var(--blue-deep);box-shadow:3px 3px 0 var(--shadow);
+    margin-bottom:14px;
+  }
+  .question{font-size:22px;line-height:1.6;color:var(--ink);margin-bottom:22px;}
+  .options{display:flex;flex-direction:column;gap:14px;}
+  .opt{
+    display:flex;gap:14px;align-items:flex-start;cursor:pointer;
+    background:var(--blue-ice);border:3px solid var(--blue);
+    padding:14px 16px;font-size:16px;line-height:1.7;
+    box-shadow:4px 4px 0 rgba(18,58,107,.25);
+    transition:transform .05s steps(1);
+  }
+  .opt:hover{background:var(--orange-soft);border-color:var(--orange);transform:translateX(4px);}
+  .opt:active{transform:translateY(3px);box-shadow:1px 1px 0 rgba(18,58,107,.25);}
+  .opt .key{
+    flex:0 0 auto;font-family:'Press Start 2P',monospace;font-size:14px;
+    background:#fff;color:var(--blue-deep);border:3px solid var(--blue-deep);
+    width:34px;height:34px;display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .opt:hover .key{background:var(--orange);color:#fff;border-color:var(--orange-deep);}
+
+  /* ---------- 结果页 ---------- */
+  .result-head{
+    text-align:center;margin-bottom:14px;
+    font-family:'Press Start 2P','幼圆',monospace;font-size:12px;color:var(--blue);
+    letter-spacing:2px;
+  }
+  .result-avatar{
+    width:120px;height:120px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
+    font-size:64px;background:var(--orange-soft);border:5px solid var(--blue-deep);
+    box-shadow:6px 6px 0 var(--shadow);animation:bob 2.4s steps(2) infinite;
+  }
+  .result-name{font-size:36px;text-align:center;color:var(--blue-deep);text-shadow:3px 3px 0 var(--blue-sky);margin-bottom:6px;}
+  .result-role{text-align:center;font-size:20px;color:var(--orange-deep);margin-bottom:18px;}
+  .tags{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+  .tag{
+    font-size:14px;background:var(--blue);color:#fff;border:3px solid var(--blue-deep);
+    padding:6px 12px;box-shadow:3px 3px 0 var(--shadow);
+  }
+  .tag:nth-child(even){background:var(--orange);}
+  .result-desc{
+    background:var(--blue-ice);border:3px dashed var(--blue);padding:16px 18px;
+    font-size:16px;line-height:2;color:var(--ink);margin-bottom:18px;
+  }
+  .partner-box{
+    background:var(--orange-soft);border:3px solid var(--orange);padding:16px 18px;margin-bottom:22px;
+    font-size:16px;line-height:1.9;color:var(--ink);
+  }
+  .partner-box .pt{color:var(--orange-deep);font-size:18px;display:block;margin-bottom:6px;}
+  .dim-detail{font-size:14px;color:var(--blue-deep);line-height:1.9;margin-bottom:20px;background:#fff;border:3px solid var(--blue-sky);padding:12px 16px;}
+  .actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+  .footer-note{
+    text-align:center;margin-top:26px;font-size:13px;color:var(--blue);opacity:.8;letter-spacing:1px;
+  }
+  @media (max-width:560px){
+    h1.title{font-size:32px;}
+    .question{font-size:19px;}
+    .btn{font-size:19px;padding:12px 30px;}
+  }
+</style>
+</head>
+<body>
+<div class="sky">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+</div>
+<div class="sun"></div>
+
+<div class="wrap">
+
+  <!-- ============ 封面 ============ -->
+  <div id="screen-cover">
+    <div class="panel">
+      <div style="text-align:center"><span class="badge">FLOWER 8 · TEST</span></div>
+      <h1 class="title">🌸 花少8<span class="hl">人格测试</span> 🌸</h1>
+      <p class="subtitle">12 道题 · 解锁你的花8旅行人格</p>
+      <div class="pixel-avatars">
+        <div class="pxavatar">🌮</div>
+        <div class="pxavatar">✈️</div>
+        <div class="pxavatar">👜</div>
+        <div class="pxavatar">🍜</div>
+        <div class="pxavatar">❄️</div>
+      </div>
+      <p class="subtitle" style="font-size:15px;">每一道题都是内心的投影<br>直觉选择，遇见与你共鸣的那个旅者 ✨</p>
+      <div class="rules">
+        <b>【测试规则】</b><br>
+        ① 凭<b>第一直觉</b>选择最符合你的选项，别想太久；<br>
+        ② 共 12 道题，无需记录答案，系统自动统计；<br>
+        ③ 结果按<b>四个维度</b>交叉分析，得出你的花少8人格角色；<br>
+        ④ 测完别忘看看你的<b>最佳旅行搭档</b>是谁哦！
+      </div>
+      <button class="btn" onclick="startQuiz()">▶ 开始测试</button>
+    </div>
+    <p class="footer-note">—— 花儿与少年2026 ——</p>
+  </div>
+
+  <!-- ============ 答题 ============ -->
+  <div id="screen-quiz" class="hidden">
+    <div class="panel">
+      <div class="progress-outer"><div class="progress-inner" id="progressBar"></div></div>
+      <div class="progress-label" id="progressLabel">1 / 12</div>
+      <div class="qnum" id="qnumTag">Q1</div>
+      <div class="question" id="questionText"></div>
+      <div class="options" id="optionsBox"></div>
+    </div>
+    <p class="footer-note">直觉才是真相 · 选你第一眼心动的那个 ✨</p>
+  </div>
+
+  <!-- ============ 结果 ============ -->
+  <div id="screen-result" class="hidden">
+    <div class="panel">
+      <div class="result-head">★ TEST COMPLETE ★</div>
+      <div class="result-avatar" id="resultAvatar"></div>
+      <div class="result-name" id="resultName"></div>
+      <div class="result-role" id="resultRole"></div>
+      <div class="tags" id="resultTags"></div>
+      <div class="result-desc" id="resultDesc"></div>
+      <div class="dim-detail" id="dimDetail"></div>
+      <div class="partner-box" id="partnerBox"></div>
+      <div class="actions">
+        <button class="btn blue small" onclick="startQuiz()">↻ 再测一次</button>
+        <button class="btn small" onclick="backCover()">🏠 回到封面</button>
+      </div>
+    </div>
+    <p class="footer-note">测完觉得自己是花少8里的谁呢？快去评论区对号入座吧！🌸</p>
+  </div>
+
+</div>
+
+<script>
+/* ================= 题库 ================= */
+const QUESTIONS = [
+  {q:"当你面临一个全新的旅行目的地时，你的第一反应更倾向于？",
+   opts:[
+    "立刻开始做攻略，把行程、住宿、交通安排得明明白白，心里有底才出发。",
+    "随便看看就好，到了当地再说，随遇而安最快乐。",
+    "先看看那里有什么奇闻逸事、冷门传说或者古怪景点，正经景点无所谓，好玩最重要。",
+    "查一查当地有什么好吃的，没好吃的就不想去了。"]},
+  {q:"团队里大家因为去哪里吃饭争论不休，你会怎么做？",
+   opts:[
+    "直接说出你的选择，不喜欢模棱两可，干脆利落，不喜欢在这种事上浪费时间。",
+    "大家决定就好，我都可以，不想为了这种事浪费精力，笑眯眯地等结果。",
+    "我没什么特别想吃的，但我会说一些很抽象的话试图让气氛轻松，比如“你们吵的样子好像我上次看到的两只企鹅”。",
+    "我已经有想吃的了！而且我知道附近有一家店特别好吃，我来带路！"]},
+  {q:"旅行中如果计划突然被打乱（比如航班延误），你的内心状态是？",
+   opts:[
+    "立刻拿出Plan B，重新规划接下来的时间，不能让意外毁了旅行，但心里其实已经开始焦虑了。",
+    "有点小焦虑，但会安慰自己“既来之则安之”，先看看附近有什么好吃的，或者默默安抚身边慌张的人。",
+    "无所谓诶，反正原计划我也不是很感兴趣，正好可以到处逛逛，看看机场里有什么奇怪的商店。",
+    "哈哈哈哈太好笑了！来来来我拍个照发群里，然后讲个笑话把尴尬化解掉，顺便调侃一下旁边着急的人。"]},
+  {q:"当团队里有人因为压力大而情绪低落时，你通常会？",
+   opts:[
+    "默默陪在对方身边，递瓶水，用最稳重的语气说“没事，有我在”，不太多话但让人安心。",
+    "讲个笑话或者调侃一下，用幽默的方式把尴尬的气氛化解掉，顺便拍拍对方的肩膀。",
+    "我不太知道怎么安慰，但我会默默递纸巾，然后说一些很发散的话试图转移对方注意力，虽然可能越说越离谱。",
+    "立刻冲过去说“哎呀怎么了！别难过！都怪我！”然后自己也快急哭了，比对方还紧张。"]},
+  {q:"面对旅行中的极限运动或冒险项目（如跳伞、深潜），你的态度是？",
+   opts:[
+    "冲！越刺激越好，人生就是要不断挑战未知，但我得先确认安全措施做到位了。",
+    "算了吧，我就想在酒店泳池边躺着，或者逛逛安全又有趣的景点，安安稳稳就好。",
+    "看心情吧，如果大家都在我可能会跟着去，但我大概率会在旁边拍照或者走神。",
+    "我超想试试！不过如果有点害怕的话……算了算了，还是你们去吧，我在下面等你们。"]},
+  {q:"在社交场合中，面对一群不太熟的前辈或新朋友，你更倾向于？",
+   opts:[
+    "保持礼貌和谦逊，多听少说，努力不给大家添麻烦，但内心其实有点紧绷，怕自己说错话。",
+    "大大方方融入，主动找话题，用我的开朗感染大家，成为气氛担当，但偶尔会担心自己是不是太闹了。",
+    "我不太知道怎么融入，可能会找个角落待着，或者专注于观察周围有趣的东西，偶尔插一句很跳脱的话。",
+    "乖乖打招呼，态度诚恳，对前辈们保持尊重，但偶尔因为太想表现好而显得有点拘谨。"]},
+  {q:"旅行中你最不能忍受的事情是？",
+   opts:[
+    "行程毫无规划，像无头苍蝇一样乱转，浪费时间，而且不安全。",
+    "被强迫做自己不喜欢的事，或者被人管得太紧，让我没有自己的空间。",
+    "无聊。如果每天都是吃饭睡觉逛景点那也太没劲了，我需要一些奇奇怪怪的体验。",
+    "吃不饱。或者食物不好吃。这是旅行的大忌中的大忌。"]},
+  {q:"如果让你在团队中担任一个角色，你最像？",
+   opts:[
+    "幕后英雄——断后、搬行李、安抚情绪，做大家最坚实的后盾，不需要聚光灯。",
+    "领航船长——统筹全局、做决策、负责到底，大家跟着我走没错。",
+    "开心果——虽然不一定在主线任务上，但我的脑洞和搞怪让旅程变得有趣。",
+    "小跟班——配合度max，让我干嘛就干嘛，不挑活，不抱怨，开心就好。"]},
+  {q:"到了目的地，面对当地特色美食，你的反应是？",
+   opts:[
+    "疯狂拍照发朋友圈，然后大快朵颐，吃到扶墙出才满足，永远在找下一家好吃的。",
+    "先看看干不干净，查查有没有卫生隐患，再决定吃不吃，安全最重要。",
+    "随便吃点就好，我对吃的要求不高，但如果有特别奇怪的食物我可能会好奇尝一口。",
+    "吃两口就开始看周围的人或者玩手机，食物对我来说只是燃料，够用就行。"]},
+  {q:"旅行途中，大家需要临时决定谁去前台沟通房间问题，你会？",
+   opts:[
+    "主动站出来，拿着小本子上的信息就去，干脆利落，虽然心里有点打鼓但绝不掉链子。",
+    "默默退后半步，希望别人去，自己不太想面对这种沟通压力，但如果没人去我也能硬着头皮上。",
+    "我可能站在旁边发呆，等大家决定好了我再跟着去，反正我去了也不知道怎么跟前台说。",
+    "我直接说“我去我去！”然后大步往前走，虽然可能表达得不太清楚，但态度满分。"]},
+  {q:"如果行程中有一段很长的车程，你通常会？",
+   opts:[
+    "戴上耳机听歌或补觉，享受属于自己的安静时光，不主动打扰别人。",
+    "拿出小本本整理今天的照片和明天的计划，顺便想想还有什么遗漏的细节。",
+    "看着窗外发呆，或者跟旁边的人说一些很抽象的话，比如“你觉得云像不像一只猫？”然后开始讲一个关于猫的奇怪故事。",
+    "拉着旁边的人聊天，或者组织大家玩个小游戏，绝不冷场，但聊着聊着可能自己先走神了。"]},
+  {q:"旅行结束时，你最大的感受通常是？",
+   opts:[
+    "意犹未尽！已经开始计划下一次冒险了，不过回去第一件事是补觉。",
+    "终于可以回家躺平了，虽然开心但真的好累，希望下次不用我操心这么多。",
+    "好舍不得大家啊，这几天虽然有时候有点累，但真的好开心，希望回去之后还能联系。",
+    "终于可以回家好好吃一顿了！不过确实挺开心的，下次还来！"]}
+];
+
+/* ================= 维度映射（按计分规则） =================
+   维度一 能量来源：Q1 & Q6   维度二 信息处理：Q2 & Q9
+   维度三 决策方式：Q3 & Q10  维度四 生活态度：Q5 & Q12
+   （Q4/Q7/Q8/Q11 为氛围题，不计入计分） */
+const DIM_RULES = [
+  {name:"能量来源", answers:[[0,"A","稳定型"],[0,"B","内向型"],[0,"C","发散型"],[0,"D","外向型"],
+                             [5,"A","内向型"],[5,"B","外向型"],[5,"C","发散型"],[5,"D","稳定型"]]},
+  {name:"信息处理", answers:[[1,"A","实感型"],[1,"B","情感型"],[1,"C","直觉型"],[1,"D","享受型"],
+                             [8,"B","实感型"],[8,"C","直觉型"],[8,"A","情感型"],[8,"D","享受型"]]},
+  {name:"决策方式", answers:[[2,"A","理性型"],[2,"B","焦虑型"],[2,"C","回避型"],[2,"D","感性型"],
+                             [9,"A","理性型"],[9,"B","焦虑型"],[9,"C","回避型"],[9,"D","感性型"]]},
+  {name:"生活态度", answers:[[4,"A","判断型"],[4,"B","知觉型"],[4,"C","探索型"],[4,"D","享乐型"],
+                             [11,"A","判断型"],[11,"B","知觉型"],[11,"C","探索型"],[11,"D","享乐型"]]}
+];
+
+/* ================= 人格档案 ================= */
+const PERSONAS = [
+  {name:"林依晨", role:"终极规划师", avatar:"📝",
+   types:["稳定型","实感型","理性型","判断型"],
+   partner:"邓为",
+   partnerNote:"一个负责冲在前方规划，一个负责稳在后方的情绪。",
+   desc:"你是团队的“定海神针”。领导力、决策力、行动力三合一，小本子不离手。你担心的永远是最实际的问题（安全、住宿、路线），虽然偶尔因为太追求效率而显得强势，但大家心里都知道：有你在，旅行就不会翻车。你爱追求刺激，喜欢挑战，是那种“玩也要玩得明明白白”的人。"},
+  {name:"殷桃", role:"直率大姐大", avatar:"🍵",
+   types:["内向型","情感型","感性型","知觉型"],
+   partner:"吴君如",
+   partnerNote:"一个负责直率决策，一个负责用反差萌和幽默把气氛彻底点燃，两人一静一动，互补得刚刚好。",
+   desc:"笑眯眯的外表下是干脆利落的灵魂。你不喜欢当领导，但绝对是团队里的靠谱担当。你讨厌模棱两可，有话直说，活得通透。旅行对你来说不是受罪，是享受，别指望你能为了赶行程而放弃一顿好饭。你不爱追求刺激，安稳舒服最重要。"},
+  {name:"吴君如", role:"反差萌女王", avatar:"🎭",
+   types:["外向型","享受型","感性型","判断型"],
+   partner:"王星越",
+   partnerNote:"一个负责主导气氛，一个负责认真执行（虽然会焦虑但能完成）。",
+   desc:"气场两米八，但偶尔秒变调皮小孩。你口无遮拦但从不恶意，喜欢被关注，享受主导感。你不服老、爱开玩笑，是那种“虽然有点强势但大家都爱你”的存在。你的旅行宗旨是：开心最重要，尺度大一点也无所谓。你爱追求刺激，喜欢挑战，是团里的开心果兼气氛担当。"},
+  {name:"邓为", role:"安心守护者", avatar:"🛡️",
+   types:["稳定型","实感型","回避型","探索型"],
+   partner:"林依晨",
+   partnerNote:"一个负责冲在前方规划，一个负责稳在后方的情绪。",
+   desc:"情绪稳定的天花板。你像一杯温水，不烫不凉刚刚好。没什么能让你崩溃，但你的细腻藏在细节里——默默断后、安抚焦虑、提供情绪价值。你是那种“有他在就很安心”的存在，虽然领导力和沟通能力稍弱，但你的稳重无可替代。你内心很细腻，喜欢做断后的人，在后方支持大家。"},
+  {name:"王星越", role:"阳光焦虑体", avatar:"😅",
+   types:["内向型","享受型","焦虑型","判断型"],
+   partner:"吴君如",
+   partnerNote:"一个负责主导气氛，一个负责认真执行（虽然会焦虑但能完成）。",
+   desc:"表面大大咧咧，内心疯狂打鼓。你怕给别人添麻烦，怕攻略做不好，怕拖后腿。你愿意追求刺激，但内心其实更渴望被认可。导游的重担到你身上你会焦虑，对人际关系有点紧张，但很多事情还是能认真投入完成。放轻松，你比自己以为的更棒！"},
+  {name:"王可", role:"快乐小吃货", avatar:"🍜",
+   types:["外向型","享受型","感性型","享乐型"],
+   partner:"周冬雨",
+   partnerNote:"一个负责提供奇思妙想和冷门趣闻，一个负责提供美食和毫无压力的陪伴，两个人在一起就是“快乐的抽象”，谁也不嫌谁奇怪。",
+   desc:"快乐的小精灵！你的旅行核心就是吃，其他都是附加项。性格随和、没有攻击性，偶尔犹豫但从不内耗。对前辈保持尊重，但内心OS永远是“这个好吃吗？”。你是团队的润滑剂，只要有你在，气氛就不会冷场。你特别能吃，永远吃不饱，永远狂吃不胖。"},
+  {name:"周冬雨", role:"抽象小精灵", avatar:"🌫️",
+   types:["发散型","直觉型","回避型","探索型"],
+   partner:"王可",
+   partnerNote:"一个负责提供奇思妙想和冷门趣闻，一个负责提供美食和毫无压力的陪伴，两个人在一起就是“快乐的抽象”，谁也不嫌谁奇怪。",
+   desc:"你是个古灵精怪的“抽象派”，思维发散、脑洞清奇，说话好玩但常常让人摸不着头脑。旅行中的主线任务对你来说有点遥远——博物馆？世界杯？你可能在开小差或者不知道怎么融入。你社恐但不讨人厌，行李箱乱得像被翻过，但配合度极高，让干嘛就干嘛。你不是不关心，只是你的关注点永远在奇闻逸事和有趣的小细节上。你是那种“虽然不知道你在想什么，但觉得你挺可爱的”存在。"}
+];
+
+/* ================= 状态与流程 ================= */
+const LETTERS = ["A","B","C","D"];
+let current = 0;
+let answers = new Array(12).fill(null);
+
+function show(id){
+  ["screen-cover","screen-quiz","screen-result"].forEach(s=>{
+    document.getElementById(s).classList.toggle("hidden", s!==id);
+  });
+  window.scrollTo({top:0,behavior:"instant"});
+}
+function startQuiz(){
+  current = 0;
+  answers = new Array(12).fill(null);
+  show("screen-quiz");
+  renderQuestion();
+}
+function backCover(){ show("screen-cover"); }
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  document.getElementById("progressBar").style.width = (current/12*100)+"%";
+  document.getElementById("progressLabel").textContent = (current+1)+" / 12";
+  document.getElementById("qnumTag").textContent = "Q"+(current+1);
+  document.getElementById("questionText").textContent = q.q;
+  const box = document.getElementById("optionsBox");
+  box.innerHTML = "";
+  q.opts.forEach((text,i)=>{
+    const div = document.createElement("div");
+    div.className = "opt";
+    div.innerHTML = '<div class="key">'+LETTERS[i]+'</div><div>'+text+'</div>';
+    div.onclick = ()=>select(i);
+    box.appendChild(div);
+  });
+}
+function select(i){
+  answers[current] = LETTERS[i];
+  current++;
+  if(current < 12){ renderQuestion(); }
+  else{
+    document.getElementById("progressBar").style.width = "100%";
+    setTimeout(showResult, 250);
+  }
+}
+
+/* ================= 计分 ================= */
+function calcDims(){
+  // 每个维度的两次作答 → 若冲突取先出现的人格倾向由计分兜底
+  return DIM_RULES.map(d=>{
+    const hits = d.answers.filter(a=>answers[a[0]]===a[1]).map(a=>a[2]);
+    return {name:d.name, types:hits};
+  });
+}
+function scorePersonas(){
+  const dims = calcDims();
+  // 每个（维度,类型）出现次数
+  const dimTypeCount = dims.map(d=>{
+    const m = {};
+    d.types.forEach(t=>m[t]=(m[t]||0)+1);
+    return m;
+  });
+  // 计算每个人格的分值：每个维度里，人格类型获得的票数 / 该维度总票数
+  return PERSONAS.map((p,idx)=>{
+    let score = 0;
+    DIM_RULES.forEach((d,di)=>{
+      const got = dimTypeCount[di][p.types[di]] || 0;
+      const total = d.answers.filter(a=>answers[a[0]]===a[1]).length || 1;
+      score += got/total;
+    });
+    return {idx, score};
+  }).sort((a,b)=>b.score-a.score);
+}
+function showResult(){
+  const ranked = scorePersonas();
+  const p = PERSONAS[ranked[0].idx];
+  const dims = calcDims();
+
+  document.getElementById("resultAvatar").textContent = p.avatar;
+  document.getElementById("resultName").textContent = p.name;
+  document.getElementById("resultRole").textContent = "「 " + p.role + " 」";
+
+  const tags = document.getElementById("resultTags");
+  tags.innerHTML = p.types.map(t=>'<span class="tag">'+t+'</span>').join("");
+
+  document.getElementById("resultDesc").textContent = p.desc;
+
+  // 维度详情
+  const dimNames = ["能量来源","信息处理","决策方式","生活态度"];
+  let detail = "🧭 你的维度倾向：<br>";
+  dims.forEach((d,i)=>{
+    const label = d.types.length ? d.types.join(" + ") : "——";
+    detail += "▪ " + dimNames[i] + "：<b>" + label + "</b><br>";
+  });
+  detail += '<span style="opacity:.65;font-size:12px;">（Q4 / Q7 / Q8 / Q11 为氛围题，不计入计分）</span>';
+  document.getElementById("dimDetail").innerHTML = detail;
+
+  document.getElementById("partnerBox").innerHTML =
+    '<span class="pt">💡 你的花少旅行最佳搭档：'+p.partner+'</span>'+p.partnerNote;
+
+  show("screen-result");
+}
+</script>
+</body>
+</html>
